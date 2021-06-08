@@ -27,28 +27,14 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class AdminSystemConfigSave implements ObserverInterface
 {
-    protected $configWriter;
-    protected $_cacheTypeList;
-    protected $_cacheFrontendPool;
-    
+	protected $configWriter;
+
 	public function __construct(
-        \Magento\Framework\App\Config\Storage\WriterInterface $configWriter,
-        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
-        \Magento\Framework\App\Cache\Frontend\Pool $cacheFrontendPool
+		\Magento\Framework\App\Config\Storage\WriterInterface $configWriter
 		) {
         $this->configWriter = $configWriter;
-        $this->_cacheTypeList = $cacheTypeList;
-        $this->_cacheFrontendPool = $cacheFrontendPool;
 	}
-    protected function flushCache(){
-        $types = array('config','layout','block_html','full_page');
-        foreach ($types as $type) {
-            $this->_cacheTypeList->cleanType($type);
-        }
-        foreach ($this->_cacheFrontendPool as $cacheFrontend) {
-            $cacheFrontend->getBackend()->clean();
-        }
-    }
+
 	public function execute(\Magento\Framework\Event\Observer $observer)
 	{
 		$configData        = $observer->getConfigData();
@@ -67,7 +53,6 @@ class AdminSystemConfigSave implements ObserverInterface
                             $this->configWriter->save('veslicense/general/'.$key,  $module_license_key, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, 0);
                         }
                     }
-                    $this->flushCache();
                 }
             }
         }
