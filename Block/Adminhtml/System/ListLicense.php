@@ -128,45 +128,9 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
             echo __('Please enable the SOAP extension on server, it\'s required in Magento2, check more details at <a href="http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html#required-php-extensions" target="_blank">here</a>. If you can not enable the SOAP, please skip the license message, you can active in the future. We are sorry for any inconvenience. ');
             return;
         }
-        /*
-        if (!extension_loaded('soap')) {
-            throw new \Magento\Framework\Webapi\Exception(
-                __('SOAP extension is not loaded.'),
-                0,
-                \Magento\Framework\Webapi\Exception::HTTP_INTERNAL_ERROR
-            );
-        }
-
         $email = $html = '';
-        try{
-            $opts = array(
-                    'ssl' => array(
-                        'verify_peer' => false,
-                        'verify_peer_name' => false,
-                        'allow_self_signed' => true
-                    ),
-                    'http' => array(
-                        'user_agent' => 'PHPSoapClient'
-                    )
-                );
-            $context = stream_context_create($opts);
-            $params = array('soap_version'=>SOAP_1_2,
-                            'verifypeer' => false,
-                            'verifyhost' => false,
-                            'exceptions' => 1,
-                            'cache_wsdl' => WSDL_CACHE_NONE,
-                            'stream_context'=>$context);
-
-            $proxy = new \SoapClient(self::API_URL, $params);
-            $sessionId = $proxy->login(self::API_USERNAME, self::API_PASSWORD);
-            $products = $proxy->call($sessionId, 'veslicense.productlist');
-        
-        }catch(SoapFault $e){
-
-        }
-        */
-        $email = $html = '';
-        $list_products = $this->getProductList();
+        //$list_products = $this->getProductList();
+        $list_products = [];
         $products = isset($list_products['products'])?$list_products['products']:[];
         $extensions = [];
         foreach ($files as $file) {
@@ -208,8 +172,16 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
 
         if(!empty($extensions)){
             $connection = $this->_resource->getConnection();
-            $html .= '<div class="vlicense">';
+            $html .= '<div class="vlicense module-license-key-wrapper">';
             $html .= '<h1 style="margin-bottom: 50px;text-align: center;">Landofcoder Licenses</h1>';
+            $html .= '<div class="vitem"><div class="pimg"></div>';
+            $html .= '<div class="pdetails">';
+            $html .= '<p><strong>Step 1:</strong> Input License Keys for there extensions bellow.</p>';
+            $html .= '<p><strong>Step 2:</strong> Click button "Save Config".</p>';
+            $html .= '<p><strong>Step 3:</strong> Click button "Verify Licenses".</p>';
+            $html .= '<div id="verify_button_wrapper"></div>';
+            $html .= '</div>';
+            $html .= '</div>';
             foreach ($extensions as $_extension) {
                 $name = str_replace('[licenses]', '[' . str_replace(['-','_',' '], [''], $_extension['sku']) . ']', $element->getName());
                 $value = $this->_helper->getConfig('general/' . str_replace(['-','_',' '], [''], $_extension['sku']),'veslicense');
@@ -226,11 +198,9 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
                     );
                 $remoteAddress = $this->_remoteAddress->getRemoteAddress();
                 $domain        = $this->getDomain($baseUrl);
-                $response = $this->verifyLicense($value,$_extension['sku'], $domain, $remoteAddress);
+                //$response = $this->verifyLicense($value,$_extension['sku'], $domain, $remoteAddress);
                 $license = isset($response["license"])?$response["license"]:false;
-                /*
-                $license       = $proxy->call($sessionId, 'veslicense.active', array($value, $_extension['sku'], $domain, $remoteAddress));
-                */
+
                 if (!is_array($license) && $license === 1) {
                     $license = [];
                     $license['is_valid'] = 0;
@@ -243,14 +213,16 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
                 $exName = (isset($_extension['item_title'])?$_extension['item_title']:$_extension['name']);
 
                 $html .= '<div class="vitem">';
+                //if ($_extension['pimg']) {
                 $html .= '<div class="pimg">';
                 $html .= '<a href="' . $_extension['purl'] . '" target="_blank" title="' . $exName . '"><img src="' .  $_extension['pimg'] . '"/></a>';
                 $html .= '</div>';
+                //} 
                 $html .= '<div class="pdetails">';
                 $html .=  '<h1><a href="' . $_extension['purl'] . '" target="_blank" title="' . $exName . '">' . $exName . '</a></h1>';
                 $html .= '<div>';
                 $html .= '<span class="plicense"><strong>License Serial</strong></span>';
-                $html .= '<div><input type="text" name="' . $name . '" value="' . $value . '"/></div>';
+                $html .= '<div><input type="text" class="module-license-key" name="' . $name . '" value="' . $value . '"/></div>';
                 $html .= '<div class="pmeta">';
 
                 if (isset($_extension['version']) && $_extension['version']) {
@@ -295,6 +267,38 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
                 $html .= '</div>';
                 $html .= '</div>';
             }
+            $html .= '</div>';
+            $html .= '<div class="vitem"><div class="pimg"></div>';
+            $html .= '<div class="pdetails">';
+            $html .= '<div id="landofcoder-info">
+                            Copyright © 2021 <a href="https://landofcoder.com/?utm_source=smtp&utm_medium=admin" target="_blank">Landofcoder, LLC</a>
+                            <a href="https://landofcoder.com/contacts/?utm_source=smtp&utm_medium=admin#support">Support</a>
+                            <a href="https://landofcoder.com/magento/magento-2-extensions.html?utm_source=smtp&utm_medium=admin" target="_blank">More Extensions</a>
+                        </div>
+                        <hr style="border-top: 1px solid #e3e3e3" />
+                        <style>
+                            #landofcoder-info a {
+                                font-weight: bold;
+                                border-left: 2px solid #e3e3e3;
+                                padding-left:10px;
+                                padding-right:10px;
+                                color: #ef7e1e;
+                            }
+
+                            #landofcoder-info a:first-child {
+                                padding-left: 5px;
+                                border-left: none;
+                            }
+
+                            #landofcoder-info {
+                                padding-bottom: 5px;
+                            }
+
+                            .section-config.active #system_smtpapp-head {
+                                padding-bottom: 0px;
+                            }
+                        </style>';
+            $html .= '</div>';
             $html .= '</div>';
         }else{
             $licenseCollection = $this->_license->getCollection();

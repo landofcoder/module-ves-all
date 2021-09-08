@@ -75,6 +75,9 @@
 			<tab>vesalltab</tab>
 			<resource>Ves_All::config</resource>
 			<group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+				<field id="button" translate="label comment" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Ves\All\Block\Adminhtml\System\Config\TestButton</frontend_model>
+                </field>
 				<field id="licenses" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Manage Licenses</label>
 					<frontend_model>Ves\All\Block\Adminhtml\System\ListLicense</frontend_model>
