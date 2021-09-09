@@ -254,7 +254,7 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
             $html .= '<div class="vitem"><div class="pimg"></div>';
             $html .= '<div class="pdetails">';
             $html .= '<div id="landofcoder-info">
-                            Copyright © 2021 <a href="https://landofcoder.com/?utm_source=smtp&utm_medium=admin" target="_blank">Landofcoder, LLC</a>
+                            Copyright © 2021 <a href="https://landofcoder.com/?utm_source=smtp&utm_medium=admin" target="_blank">Landofcoder Team</a>
                             <a href="https://landofcoder.com/contacts/?utm_source=smtp&utm_medium=admin#support">Support</a>
                             <a href="https://landofcoder.com/magento/magento-2-extensions.html?utm_source=smtp&utm_medium=admin" target="_blank">More Extensions</a>
                         </div>
