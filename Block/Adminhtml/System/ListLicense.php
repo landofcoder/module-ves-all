@@ -198,17 +198,19 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
                     );
                 $remoteAddress = $this->_remoteAddress->getRemoteAddress();
                 $domain        = $this->getDomain($baseUrl);
+                $collection = $this->_license->getCollection()->addFieldToFilter("extension_code", $_extension['sku']);
+                $license = $collection->getFirstItem();
                 //$response = $this->verifyLicense($value,$_extension['sku'], $domain, $remoteAddress);
-                $license = isset($response["license"])?$response["license"]:false;
+                //$license = isset($response["license"])?$response["license"]:false;
 
-                if (!is_array($license) && $license === 1) {
-                    $license = [];
-                    $license['is_valid'] = 0;
-                }
-                if ($license === true) {
-                    $license = [];
-                    $license['is_valid'] = 1;
-                }
+                // if (!is_array($license) && $license === 1) {
+                //     $license = [];
+                //     $license['is_valid'] = 0;
+                // }
+                // if ($license === true) {
+                //     $license = [];
+                //     $license['is_valid'] = 1;
+                // }
 
                 $exName = (isset($_extension['item_title'])?$_extension['item_title']:$_extension['name']);
 
@@ -229,40 +231,21 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
                     $html .= '<p><span><strong>Version: ' . (isset($_extension['version'])?$_extension['version']:'') . '</strong></span></p>';
                 }
 
-                if(!empty($license) && $license['is_valid']){
+                if($license && $license->getStatus()){
                     $html .= '<p><strong>Status: </strong><span class="pvalid">Valid</span></p>';
                 }else{
                     $html .= '<p><strong>Status: </strong><span class="pinvalid">Invalid</span></p>';
                 }
-                if(!empty($license) && isset($license['description'])){
-                    $html .= $license['description'];
-                }
-                if(!empty($license) && isset($license['created_at'])){
-                    $html .= '<p><strong>Activation Date:</strong> ' . $license['created_at'] . '</p>';
-                }
-                if(!empty($license) && isset($license['expired_time'])){
-                    $html .= '<p><strong>Expiration Date:</strong> ' . $license['expired_time'] . '</p>';
-                }
+                // if(!empty($license) && isset($license['description'])){
+                //     $html .= $license['description'];
+                // }
+                // if(!empty($license) && isset($license['created_at'])){
+                //     $html .= '<p><strong>Activation Date:</strong> ' . $license['created_at'] . '</p>';
+                // }
+                // if(!empty($license) && isset($license['expired_time'])){
+                //     $html .= '<p><strong>Expiration Date:</strong> ' . $license['expired_time'] . '</p>';
+                // }
                 $html .= '</div>';
-                $licenseCollection = $this->_license->getCollection();
-                foreach ($licenseCollection as $klience => $vlience) {
-                    if($vlience->getData('extension_code') == $_extension['sku']){
-                        $vlience->delete();
-                    }
-                }
-                $licenseData = [];
-                if(isset($_extension['sku'])){
-                    $licenseData['extension_code'] = $_extension['sku'];
-                }
-                if(isset($_extension['name'])){
-                    $licenseData['extension_name'] = $_extension['name'];
-                }
-                if(empty($license) || !$license['is_valid']){
-                    $licenseData['status'] = 0;
-                }else{
-                    $licenseData['status'] = 1;
-                }
-                $this->_license->setData($licenseData)->save();
                 $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
