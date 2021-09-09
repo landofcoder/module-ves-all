@@ -77,7 +77,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'license',
                 [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                    'nullable' => true
+                    'nullable' => true,
+                    'comment' => 'License key'
                 ]
             );
             $installer->getConnection()->addColumn(
@@ -85,7 +86,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'description',
                 [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                    'nullable' => true
+                    'nullable' => true,
+                    'comment' => 'module description'
                 ]
             );
 
@@ -95,7 +97,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                     'nullable' => true,
-                    'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT
+                    'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT,
+                    'comment' => 'created at'
                 ]
             );
 
@@ -104,7 +107,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'expired_time',
                 [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    'nullable' => true
+                    'nullable' => true,
+                    'comment' => 'expired time'
                 ]
             );
         }
