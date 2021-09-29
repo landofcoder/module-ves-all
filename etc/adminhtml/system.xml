@@ -86,7 +86,7 @@
 		</section>
 		<section id="vessupport" translate="label" type="text" sortOrder="1000" showInDefault="1" showInWebsite="1" showInStore="1">
 			<class>separator-top</class>
-			<label>Support Ticket</label>
+			<label>Need Support Extension</label>
 			<tab>vesalltab</tab>
 			<resource>Ves_All::config</resource>
 			<group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
