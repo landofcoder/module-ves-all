@@ -15,6 +15,11 @@
         'jquery',
         'Magento_Ui/js/modal/alert'
     ], function ($, alert) {
+
+        function reloadPage () {
+            setTimeout(location.reload.bind(location), 1000);
+        }
+
         jQuery(document).ready(function() {
             let showButton = false;
             $("#verify_license_hidden").hide();
@@ -58,7 +63,7 @@
                 if (typeof response === 'object') {
                     if (response.error) {
                         alert({ title: 'Error', content: response.message });
-                    } else if (response.ajaxExpired) {
+                    } else if (response.ajaxRedirect) {
                         window.location.href = response.ajaxRedirect;
                     }
                 } else {
@@ -68,6 +73,7 @@
                         buttons: []
                     });
                 }
+                reloadPage();
                 //configForm.submit();
             });
         }
