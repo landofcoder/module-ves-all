@@ -1,18 +1,18 @@
 <?php
 /**
  * Venustheme
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the venustheme.com license that is
  * available through the world-wide-web at this URL:
  * http://venustheme.com/license
- * 
+ *
  * DISCLAIMER
- * 
+ *
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
- * 
+ *
  * @category   Venustheme
  * @package    Ves_All
  * @copyright  Copyright (c) 2017 Landofcoder (http://www.venustheme.com/)
@@ -27,6 +27,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Cache\StateInterface;
 use Magento\Framework\App\Cache\Type\Config;
+use Magento\Config\App\Config\Type\System;
 use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 
 class AdminSystemConfigSave implements ObserverInterface
@@ -89,7 +90,7 @@ class AdminSystemConfigSave implements ObserverInterface
                 }
             }
         }
-		
+
 	}
 
     protected function flushCache(){
