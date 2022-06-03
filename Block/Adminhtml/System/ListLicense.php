@@ -1,18 +1,18 @@
 <?php
 /**
  * Venustheme
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the venustheme.com license that is
  * available through the world-wide-web at this URL:
  * http://venustheme.com/license
- * 
+ *
  * DISCLAIMER
- * 
+ *
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
- * 
+ *
  * @category   Venustheme
  * @package    Ves_All
  * @copyright  Copyright (c) 2017 Landofcoder (http://www.venustheme.com/)
@@ -40,10 +40,10 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
 
     /**
      * [__construct description]
-     * @param \Magento\Backend\Block\Template\Context              $context 
-     * @param \Magento\Framework\App\ResourceConnection            $resource      
-     * @param \Ves\All\Helper\Data                                 $helper        
-     * @param \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress 
+     * @param \Magento\Backend\Block\Template\Context              $context
+     * @param \Magento\Framework\App\ResourceConnection            $resource
+     * @param \Ves\All\Helper\Data                                 $helper
+     * @param \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -116,14 +116,14 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
                         $vlience->delete();
                     }
                 }
-                
+
                 $licenseData = [];
                 $licenseData['extension_code'] = $sku;
                 $licenseData['extension_name'] = $name;
                 $licenseData['status'] = 2;
                 $this->_license->setData($licenseData)->save();
             }
-            
+
 
             echo __('Please enable the SOAP extension on server, it\'s required in Magento2, check more details at <a href="http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html#required-php-extensions" target="_blank">here</a>. If you can not enable the SOAP, please skip the license message, you can active in the future. We are sorry for any inconvenience. ');
             return;
@@ -191,7 +191,7 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
                 if(!$value && isset($_extension['key']) && $_extension['key']){
                     $value = $_extension['key'];
                 }
-                $value = trim($value);
+                $value = @trim($value);
                 $baseUrl = $this->_storeManager->getStore()->getBaseUrl(
                     \Magento\Framework\UrlInterface::URL_TYPE_WEB,
                     $this->_storeManager->getStore()->isCurrentlySecure()
@@ -219,7 +219,7 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
                 $html .= '<div class="pimg">';
                 $html .= '<a href="' . $_extension['purl'] . '" target="_blank" title="' . $exName . '"><img src="' .  $_extension['pimg'] . '"/></a>';
                 $html .= '</div>';
-                //} 
+                //}
                 $html .= '<div class="pdetails">';
                 $html .=  '<h1><a href="' . $_extension['purl'] . '" target="_blank" title="' . $exName . '">' . $exName . '</a></h1>';
                 $html .= '<div>';
