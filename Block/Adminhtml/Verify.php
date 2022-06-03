@@ -44,6 +44,10 @@ class Verify extends Template
      * @var \Magento\Framework\App\ResourceConnection
      */
     protected $_resource;
+
+    /**
+     * @var array
+     */
     private $_list_files = [];
 
     /**
@@ -69,12 +73,18 @@ class Verify extends Template
     ];
 
     /**
+     * @var \Magento\Framework\HTTP\Client\CurlFactory
+     */
+    protected $curl;
+
+    /**
      * EmailTest constructor.
      * @param Context $context
      * @param \Magento\Framework\App\ResourceConnection $resource
      * @param Data $dataHelper
      * @param \Ves\All\Model\License $license
      * @param \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress
+     * @param \Magento\Framework\HTTP\Client\CurlFactory $curl
      * @param array $data
      */
     public function __construct(
@@ -83,6 +93,7 @@ class Verify extends Template
         Data $dataHelper,
         \Ves\All\Model\License $license,
         \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress,
+        \Magento\Framework\HTTP\Client\CurlFactory $curl,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -90,6 +101,7 @@ class Verify extends Template
         $this->_resource      = $resource;
         $this->_license       = $license;
         $this->_remoteAddress = $remoteAddress;
+        $this->curl = $curl;
         $this->init();
     }
 
@@ -104,7 +116,7 @@ class Verify extends Template
     }
 
     /**
-     * @return int \ null
+     * @return int|null
      */
     public function getStoreId()
     {
@@ -173,6 +185,11 @@ class Verify extends Template
         $this->hash = time() . '.' . rand(300000, 900000);
     }
 
+    /**
+     * get list license files
+     *
+     * @return array
+     */
     public function getListLicenseFiles()
     {
         if(!$this->_list_files) {
@@ -346,15 +363,36 @@ class Verify extends Template
         ];
     }
 
-    public function verifyLicense($license_key, $extension, $domain, $ip) {
+    public function verifyLicense($license_key, $extension, $domain, $ip)
+    {
+        $url = self::getVerifyUrl();
+
+        try {
+            $params = [
+                'license_key' => $license_key,
+                'extension' => $extension,
+                'domain' => $domain,
+                'ip' => $ip
+            ];
+            $curl = $this->curl->create();
+            //$curl->addHeader("Content-Type", "application/json");
+            $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+            $curl->setOption(CURLOPT_TIMEOUT, 0);
+            $curl->post($url, $params);
+            $response = $curl->getBody();
+            if ($response) {
+                return json_decode($response, true);
+            }
+        } catch (\Exception $e) {
+            $response = null;
+        }
         try{
             //Authentication rest API magento2, get access token
-            $url = self::getVerifyUrl();
             $direct_url = $url."?license_key=".$license_key."&extension=".$extension.'&domain='.$domain.'&ip='.$ip;
             $response = @file_get_contents($direct_url);
-            if(!$response) {
-                $key_path = $this->getKeyPath();
+            if (!$response) {
                 $data = array("license_key"=>$license_key,"extension"=>$extension,"domain"=>$domain,"ip"=>$ip);
+                $key_path = $this->getKeyPath();
                 $crl = curl_init();
                 curl_setopt($crl, CURLOPT_SSL_VERIFYPEER, TRUE);
                 curl_setopt($crl, CURLOPT_CAPATH, $key_path);
@@ -365,6 +403,7 @@ class Verify extends Template
                 curl_setopt($crl, CURLOPT_POST, 1);
                 curl_setopt($crl, CURLOPT_POSTFIELDS, $data);
                 $response = curl_exec($crl);
+
                 if ($response) {
                 }
                 else {
@@ -375,19 +414,25 @@ class Verify extends Template
             }
             return json_decode($response, true);
         }catch(\Exception $e) {
-
+            //
         }
         return [];
     }
-    public static function getListUrl() {
+
+    public static function getListUrl()
+    {
         $url = self::SITE_URL;
         return $url."/license/listproducts";
     }
-    public static function getVerifyUrl() {
+
+    public static function getVerifyUrl()
+    {
         $url = self::SITE_URL;
         return $url."/license/verify";
     }
-    public function getKeyPath(){
+
+    public function getKeyPath()
+    {
         if(!$this->_key_path){
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $directory = $objectManager->get('\Magento\Framework\Filesystem\DirectoryList');
@@ -396,7 +441,9 @@ class Verify extends Template
         }
         return $this->_key_path;
     }
-    public function getDomain($domain) {
+
+    public function getDomain($domain)
+    {
         $domain = strtolower($domain);
         $domain = str_replace(['www.','WWW.','https://','http://','https','http'], [''], $domain);
         if($this->endsWith($domain, '/')){
@@ -404,7 +451,9 @@ class Verify extends Template
         }
         return $domain;
     }
-    public function endsWith($haystack, $needle) {
+
+    public function endsWith($haystack, $needle)
+    {
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
     }
 }
