@@ -59,7 +59,8 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
         $this->_license       = $license;
     }
 
-    public function getListLicenseFiles() {
+    public function getListLicenseFiles()
+    {
         if(!$this->_list_files) {
             $path = $this->_filesystem->getDirectoryRead(DirectoryList::APP)->getAbsolutePath('code/Ves/');
             $files = glob($path . '*/*/license.xml');

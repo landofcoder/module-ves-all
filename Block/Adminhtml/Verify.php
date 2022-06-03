@@ -173,7 +173,8 @@ class Verify extends Template
         $this->hash = time() . '.' . rand(300000, 900000);
     }
 
-    public function getListLicenseFiles() {
+    public function getListLicenseFiles()
+    {
         if(!$this->_list_files) {
             $path = $this->_filesystem->getDirectoryRead(DirectoryList::APP)->getAbsolutePath('code/Ves/');
             $files = glob($path . '*/*/license.xml');
@@ -241,7 +242,7 @@ class Verify extends Template
         $listModules = $this->getListModules();
         $needVerifyModules = [];
         if ($modules && count($modules)) {
-            
+
             foreach ($modules as $key => $value) {
                 $foundModule = isset($listModules[$key])?$listModules[$key]:null;
                 if ($foundModule && $value) {
@@ -281,7 +282,7 @@ class Verify extends Template
                     $license = [];
                     $license['is_valid'] = 1;
                 }
-                
+
                 foreach ($licenseCollection as $klience => $vlience) {
                     if($vlience->getData('extension_code') == $_extension['sku']){
                         $vlience->delete();
@@ -311,13 +312,13 @@ class Verify extends Template
         return [$result];
     }
 
-    public function validateServerLicenseSetting() 
+    public function validateServerLicenseSetting()
     {
         $result = $this->error();
         return  $result;
     }
 
-   
+
     /**
      * Format error msg
      * @param string $s
