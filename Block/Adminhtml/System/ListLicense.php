@@ -292,7 +292,13 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
         return $this->_decorateRowHtml($element, $html);
     }
 
-    public function getProductList() {
+    /**
+     * get product list
+     *
+     * @return array|mixed
+     */
+    public function getProductList()
+    {
         try{
             //Authentication rest API magento2, get access token
             $url = self::getListUrl();
@@ -326,7 +332,16 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
         return [];
     }
 
-    public function verifyLicense($license_key, $extension, $domain, $ip) {
+    /**
+     * verify license
+     * @param string $license_key
+     * @param string $extension
+     * @param string $domain
+     * @param string $ip
+     * @return mixed
+     */
+    public function verifyLicense($license_key, $extension, $domain, $ip)
+    {
         try{
             //Authentication rest API magento2, get access token
             $url = self::getVerifyUrl();
@@ -359,15 +374,30 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
         }
         return [];
     }
-    public static function getListUrl() {
+
+    /**
+     * @return string
+     */
+    public static function getListUrl()
+    {
         $url = ListLicense::SITE_URL;
         return $url."/license/listproducts";
     }
-    public static function getVerifyUrl() {
+
+    /**
+     * @return string
+     */
+    public static function getVerifyUrl()
+    {
         $url = ListLicense::SITE_URL;
         return $url."/license/verify";
     }
-    public function getKeyPath(){
+
+    /**
+     * @return string
+     */
+    public function getKeyPath()
+    {
         if(!$this->_key_path){
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $directory = $objectManager->get('\Magento\Framework\Filesystem\DirectoryList');
@@ -376,7 +406,15 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
         }
         return $this->_key_path;
     }
-    public function getDomain($domain) {
+
+    /**
+     * get domain
+     *
+     * @param string $domain
+     * @return string
+     */
+    public function getDomain($domain)
+    {
         $domain = strtolower($domain);
         $domain = str_replace(['www.','WWW.','https://','http://','https','http'], [''], $domain);
         if($this->endsWith($domain, '/')){
@@ -384,7 +422,16 @@ class ListLicense extends \Magento\Config\Block\System\Config\Form\Field
         }
         return $domain;
     }
-    public function endsWith($haystack, $needle) {
+
+    /**
+     * Ends with
+     *
+     * @param string $haystack
+     * @param string $needle
+     * @return bool
+     */
+    public function endsWith($haystack, $needle)
+    {
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
     }
 }
