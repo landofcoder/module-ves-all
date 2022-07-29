@@ -289,6 +289,7 @@ class Verify extends Template
 
             foreach ($modules as $_extension) {
                 $response = $this->verifyLicense($_extension['license'],$_extension['sku'], $domain, $remoteAddress);
+
                 $license = isset($response["license"])?$response["license"]:false;
 
                 if (!is_array($license) && $license === 1) {
